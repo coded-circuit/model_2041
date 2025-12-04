@@ -6,17 +6,17 @@ A comprehensive vision-language AI system for object detection, grounding, and v
 ## 🎯 Overview
 
 This project implements a multi-modal AI system that combines:
-- *Object Detection*: YOLO11n-OBB with custom LoRA weights for oriented bounding box detection
-- *Vision-Language Understanding*: Qwen3-VL-32B for semantic understanding and coordinate refinement
-- *Image Classification*: Automatic classification of SAR, Optical, and FCC images
-- *Query Classification*: Intelligent routing of queries to VQA or Grounding tasks
-- *RESTful API*: Flask-based API server for production deployment
+- **Object Detection**: YOLO11n-OBB with custom LoRA weights for oriented bounding box detection
+- **Vision-Language Understanding**: Qwen3-VL-32B for semantic understanding and coordinate refinement
+- **Image Classification**: Automatic classification of SAR, Optical, and FCC images
+- **Query Classification**: Intelligent routing of queries to VQA or Grounding tasks
+- **RESTful API**: Flask-based API server for production deployment
 
 ---
 
 ## 📁 Repository Structure
 
-
+```
 model_2041-main/
 │
 ├── Final_Grounding/              # Main grounding pipeline module
@@ -65,7 +65,7 @@ model_2041-main/
 ├── Dockerfile                    # Docker container configuration
 ├── .gitattributes               # Git LFS configuration
 └── README.md                    # This file
-
+```
 
 ---
 
@@ -73,7 +73,7 @@ model_2041-main/
 
 ### Main Pipeline Flow
 
-
+```
 User Input (Image + Query)
     │
     ├─→ Image Classification (SAR/Optical/FCC)
@@ -97,12 +97,12 @@ User Input (Image + Query)
                 └─→ Qwen3-VL Refinement (refiner.py)
                     └─→ Refined coordinates matching query
                         └─→ Final coordinates [cx, cy, w, h, angle]
-
+```
 
 ### Detailed Component Flow
 
-#### 1. *API Server Flow* (testing/api_server.py)
-
+#### 1. **API Server Flow** (`testing/api_server.py`)
+```
 POST /infer
     │
     ├─→ Download image (if URL provided)
@@ -120,10 +120,10 @@ POST /infer
         └─→ Execute Task
             ├─→ VQA: Generate text response
             └─→ Grounding: Return coordinates
+```
 
-
-#### 2. *Grounding Pipeline Flow* (Final_Grounding/)
-
+#### 2. **Grounding Pipeline Flow** (`Final_Grounding/`)
+```
 initialize_pipeline()
     │
     ├─→ Load YOLO Model (yolo11n-obb.pt)
@@ -140,10 +140,10 @@ get_coordinates(image_path, query)
         ├─→ Format coordinates as prompt
         ├─→ Process image + query + coordinates
         └─→ Returns: Filtered coordinates matching query
+```
 
-
-#### 3. *Model Loading Flow* (testing/model_loading.py)
-
+#### 3. **Model Loading Flow** (`testing/model_loading.py`)
+```
 initialize()
     │
     ├─→ Load Qwen3-VL Base Model (quantized 4-bit)
@@ -152,20 +152,20 @@ initialize()
     ├─→ Load SAR LoRA Adapter
     ├─→ Load Optical LoRA Adapter
     └─→ Load FCC Model (if needed)
-
+```
 
 ### Output Formats
 
 #### VQA Output
-json
+```json
 {
     "status": "success",
     "response": "Generated text answer to the visual question"
 }
-
+```
 
 #### Grounding Output
-json
+```json
 {
     "status": "success",
     "response": {
@@ -174,27 +174,27 @@ json
         "num_detections": 3
     }
 }
+```
 
-
-*Coordinate Format:*
-- cx, cy: Normalized center coordinates (0-1)
-- w, h: Normalized width and height (0-1)
-- angle: Rotation angle in degrees (-90 to 0)
+**Coordinate Format:**
+- `cx, cy`: Normalized center coordinates (0-1)
+- `w, h`: Normalized width and height (0-1)
+- `angle`: Rotation angle in degrees (-90 to 0)
 
 ---
 
 ## 🔧 Prerequisites
 
-- *Python*: 3.8 or higher
-- *CUDA*: 11.8+ (for GPU acceleration)
-- *GPU*: NVIDIA GPU with at least 16GB VRAM (recommended)
-- *Git LFS*: Required for downloading large model files
-- *Operating System*: Linux (recommended), Windows, or macOS
+- **Python**: 3.8 or higher
+- **CUDA**: 11.8+ (for GPU acceleration)
+- **GPU**: NVIDIA GPU with at least 16GB VRAM (recommended)
+- **Git LFS**: Required for downloading large model files
+- **Operating System**: Linux (recommended), Windows, or macOS
 
 ### System Requirements
-- *RAM*: 32GB+ recommended
-- *Storage*: 50GB+ free space for models
-- *CUDA Toolkit*: 12.1+ (if using GPU)
+- **RAM**: 32GB+ recommended
+- **Storage**: 50GB+ free space for models
+- **CUDA Toolkit**: 12.1+ (if using GPU)
 
 ---
 
@@ -202,7 +202,7 @@ json
 
 ### Step 1: Clone the Repository
 
-bash
+```bash
 # Clone the repository
 git clone <repository-url>
 cd model_2041-main
@@ -210,65 +210,65 @@ cd model_2041-main
 # Initialize Git LFS (required for model files)
 git lfs install
 git lfs pull
-
+```
 
 ### Step 2: Create Virtual Environment
 
-*On Linux/macOS:*
-bash
+**On Linux/macOS:**
+```bash
 # Create virtual environment
 python3 -m venv venv
 
 # Activate virtual environment
 source venv/bin/activate
+```
 
-
-*On Windows:*
-powershell
+**On Windows:**
+```powershell
 # Create virtual environment
 python -m venv venv
 
 # Activate virtual environment
 venv\Scripts\activate
-
+```
 
 ### Step 3: Install Dependencies
 
-*For API Server (Recommended):*
-bash
+**For API Server (Recommended):**
+```bash
 # Install API server dependencies
 pip install --upgrade pip
 pip install -r testing/requirements_api.txt
+```
 
-
-*For Grounding Module Only:*
-bash
+**For Grounding Module Only:**
+```bash
 # Install grounding module dependencies
 pip install --upgrade pip
 pip install -r Final_Grounding/requirements.txt
+```
 
-
-*Note*: The API server requirements include all dependencies needed for the full system.
+**Note**: The API server requirements include all dependencies needed for the full system.
 
 ### Step 4: Verify Installation
 
-bash
+```bash
 # Check Python version
 python --version  # Should be 3.8+
 
 # Check CUDA (if using GPU)
 python -c "import torch; print(torch.cuda.is_available())"
-
+```
 
 ### Step 5: Download Model Files (if not using Git LFS)
 
 If model files are not automatically downloaded via Git LFS, ensure the following files exist:
 
-- Final_Grounding/yolo11n-obb.pt
-- Final_Grounding/lora_weights.pt
-- testing/SAR_LORA_ADAPTER/adapter_model.safetensors
-- testing/Qwen_for_Optical_2/adapter_model.safetensors
-- temp/classifiers/final_model_all_classes.keras
+- `Final_Grounding/yolo11n-obb.pt`
+- `Final_Grounding/lora_weights.pt`
+- `testing/SAR_LORA_ADAPTER/adapter_model.safetensors`
+- `testing/Qwen_for_Optical_2/adapter_model.safetensors`
+- `temp/classifiers/final_model_all_classes.keras`
 
 ---
 
@@ -278,29 +278,29 @@ If model files are not automatically downloaded via Git LFS, ensure the followin
 
 The API server provides a RESTful interface for all functionality.
 
-bash
+```bash
 # Navigate to testing directory
 cd testing
 
 # Run the API server
 python api_server.py
+```
 
+The server will start on `http://0.0.0.0:7860`
 
-The server will start on http://0.0.0.0:7860
-
-*Example API Request:*
-bash
+**Example API Request:**
+```bash
 curl -X POST http://localhost:7860/infer \
   -H "Content-Type: application/json" \
   -d '{
     "imageUrl": "path/to/image.jpg",
     "query": "Locate all the airplanes"
   }'
-
+```
 
 ### Option 2: Use Grounding Module Directly
 
-python
+```python
 from Final_Grounding.main import initialize_pipeline, get_coordinates
 
 # Initialize pipeline (loads models)
@@ -319,11 +319,11 @@ coords = get_coordinates(
 print(f"Found {len(coords)} objects:")
 for coord in coords:
     print(coord)  # [cx, cy, w, h, angle]
-
+```
 
 ### Option 3: Use Optical Inference Utility
 
-python
+```python
 from optical import inference_streaming_optimized
 
 # Requires model and tokenizer to be loaded separately
@@ -335,7 +335,7 @@ result = inference_streaming_optimized(
     max_new_tokens=512
 )
 print(result)
-
+```
 
 ---
 
@@ -343,39 +343,39 @@ print(result)
 
 ### Core Modules
 
-#### 1. *Final_Grounding/* - Object Grounding Pipeline
-- *Purpose*: Detect and ground objects in images using YOLO + Qwen3-VL
-- *Key Files*:
-  - main.py: Simple interface for coordinate extraction
-  - src/pipeline.py: Main orchestrator class
-  - src/detector.py: YOLO detection with LoRA
-  - src/refiner.py: Qwen3-VL coordinate refinement
-  - src/lora.py: LoRA layer implementation
+#### 1. **Final_Grounding/** - Object Grounding Pipeline
+- **Purpose**: Detect and ground objects in images using YOLO + Qwen3-VL
+- **Key Files**:
+  - `main.py`: Simple interface for coordinate extraction
+  - `src/pipeline.py`: Main orchestrator class
+  - `src/detector.py`: YOLO detection with LoRA
+  - `src/refiner.py`: Qwen3-VL coordinate refinement
+  - `src/lora.py`: LoRA layer implementation
 
-#### 2. *testing/* - API Server & Inference Pipeline
-- *Purpose*: Production-ready API server with full pipeline
-- *Key Files*:
-  - api_server.py: Flask REST API server
-  - inference.py: Main inference pipeline orchestrator
-  - model_loading.py: Model initialization and caching
-  - classifier.py: Image type classification
-  - query_classifier.py: Query routing
-  - vqa_inference.py: Visual Question Answering
-  - geo_ground.py: Geographic grounding
+#### 2. **testing/** - API Server & Inference Pipeline
+- **Purpose**: Production-ready API server with full pipeline
+- **Key Files**:
+  - `api_server.py`: Flask REST API server
+  - `inference.py`: Main inference pipeline orchestrator
+  - `model_loading.py`: Model initialization and caching
+  - `classifier.py`: Image type classification
+  - `query_classifier.py`: Query routing
+  - `vqa_inference.py`: Visual Question Answering
+  - `geo_ground.py`: Geographic grounding
 
-#### 3. *temp/* - Development & Training
-- *Purpose*: Training notebooks and development files
-- *Contents*: Jupyter notebooks for model training and experimentation
+#### 3. **temp/** - Development & Training
+- **Purpose**: Training notebooks and development files
+- **Contents**: Jupyter notebooks for model training and experimentation
 
 ### Model Files
 
 All model files are stored in Git LFS. Ensure Git LFS is installed and initialized.
 
-- *YOLO Model*: Final_Grounding/yolo11n-obb.pt
-- *LoRA Weights*: Final_Grounding/lora_weights.pt
-- *SAR Adapter*: testing/SAR_LORA_ADAPTER/
-- *Optical Adapter*: testing/Qwen_for_Optical_2/
-- *Image Classifier*: temp/classifiers/final_model_all_classes.keras
+- **YOLO Model**: `Final_Grounding/yolo11n-obb.pt`
+- **LoRA Weights**: `Final_Grounding/lora_weights.pt`
+- **SAR Adapter**: `testing/SAR_LORA_ADAPTER/`
+- **Optical Adapter**: `testing/Qwen_for_Optical_2/`
+- **Image Classifier**: `temp/classifiers/final_model_all_classes.keras`
 
 ---
 
@@ -383,26 +383,26 @@ All model files are stored in Git LFS. Ensure Git LFS is installed and initializ
 
 ### Build Docker Image
 
-bash
+```bash
 # Build the Docker image
 docker build -t model-2041:latest .
-
+```
 
 ### Run Docker Container
 
-bash
+```bash
 # Run with GPU support (NVIDIA Docker required)
 docker run --gpus all -p 7860:7860 model-2041:latest
 
 # Or without GPU (CPU only, slower)
 docker run -p 7860:7860 model-2041:latest
-
+```
 
 ### Docker Compose (Optional)
 
-Create a docker-compose.yml:
+Create a `docker-compose.yml`:
 
-yaml
+```yaml
 version: '3.8'
 services:
   api:
@@ -418,28 +418,28 @@ services:
               capabilities: [gpu]
     environment:
       - CUDA_VISIBLE_DEVICES=0,1
-
+```
 
 Run with:
-bash
+```bash
 docker-compose up -d
-
+```
 
 ---
 
 ## 🌐 API Endpoints
 
 ### Health Check
-http
+```http
 GET /health
-
-*Response:*
-json
+```
+**Response:**
+```json
 {"status": "ok"}
-
+```
 
 ### Main Inference Endpoint
-http
+```http
 POST /infer
 Content-Type: application/json
 
@@ -447,37 +447,37 @@ Content-Type: application/json
   "imageUrl": "path/to/image.jpg" or "https://example.com/image.jpg",
   "query": "Your question or grounding query"
 }
+```
 
-
-*Response:*
-json
+**Response:**
+```json
 {
   "status": "success",
   "response": "Result based on query type"
 }
-
+```
 
 ### Debug Endpoints
 
 #### Query Classification
-http
+```http
 POST /classify_query
 Content-Type: application/json
 
 {
   "query": "What is in this image?"
 }
-
+```
 
 #### Image Classification
-http
+```http
 POST /classify_image
 Content-Type: application/json
 
 {
   "imageUrl": "path/to/image.jpg"
 }
-
+```
 
 ---
 
@@ -487,23 +487,23 @@ Content-Type: application/json
 
 | File | Location | Size (approx) | Description |
 |------|----------|---------------|-------------|
-| yolo11n-obb.pt | Final_Grounding/ | ~6MB | YOLO11n Oriented Bounding Box model |
-| lora_weights.pt | Final_Grounding/ | ~50MB | LoRA weights for YOLO |
-| adapter_model.safetensors | testing/SAR_LORA_ADAPTER/ | ~500MB | SAR-specific LoRA adapter |
-| adapter_model.safetensors | testing/Qwen_for_Optical_2/ | ~500MB | Optical-specific LoRA adapter |
-| final_model_all_classes.keras | temp/classifiers/ | ~50MB | Image classifier model |
+| `yolo11n-obb.pt` | `Final_Grounding/` | ~6MB | YOLO11n Oriented Bounding Box model |
+| `lora_weights.pt` | `Final_Grounding/` | ~50MB | LoRA weights for YOLO |
+| `adapter_model.safetensors` | `testing/SAR_LORA_ADAPTER/` | ~500MB | SAR-specific LoRA adapter |
+| `adapter_model.safetensors` | `testing/Qwen_for_Optical_2/` | ~500MB | Optical-specific LoRA adapter |
+| `final_model_all_classes.keras` | `temp/classifiers/` | ~50MB | Image classifier model |
 
 ### Model Downloads
 
 Models are automatically downloaded via Git LFS. If manual download is needed:
 
-1. *Qwen3-VL Base Model*: Automatically downloaded from HuggingFace on first use
-   - Model: unsloth/Qwen3-VL-32B-Instruct-unsloth-bnb-4bit
+1. **Qwen3-VL Base Model**: Automatically downloaded from HuggingFace on first use
+   - Model: `unsloth/Qwen3-VL-32B-Instruct-unsloth-bnb-4bit`
    - Requires HuggingFace authentication (if model is gated)
 
-2. *YOLO Model*: Included in repository via Git LFS
+2. **YOLO Model**: Included in repository via Git LFS
 
-3. *LoRA Adapters*: Included in repository via Git LFS
+3. **LoRA Adapters**: Included in repository via Git LFS
 
 ---
 
@@ -512,11 +512,11 @@ Models are automatically downloaded via Git LFS. If manual download is needed:
 ### Common Issues
 
 #### 1. Git LFS Files Not Downloaded
-bash
+```bash
 # Reinstall Git LFS
 git lfs install
 git lfs pull
-
+```
 
 #### 2. CUDA Out of Memory
 - Reduce batch size in model loading
@@ -529,24 +529,24 @@ git lfs pull
 - Verify CUDA compatibility
 
 #### 4. Import Errors
-bash
+```bash
 # Reinstall dependencies
 pip install --upgrade -r testing/requirements_api.txt
-
+```
 
 #### 5. Port Already in Use
-bash
+```bash
 # Change port in api_server.py
 app.run(host='0.0.0.0', port=8080)  # Use different port
-
+```
 
 ### GPU Configuration
 
-To specify GPU devices, modify testing/api_server.py:
+To specify GPU devices, modify `testing/api_server.py`:
 
-python
+```python
 pipeline = InferencePipeline(qwen_gpu=0, geoground_gpu=1)
-
+```
 
 ### Memory Optimization
 
@@ -563,7 +563,7 @@ For systems with limited memory:
 
 Optional environment variables:
 
-bash
+```bash
 # HuggingFace token (if models are gated)
 export HF_TOKEN="your_token_here"
 
@@ -572,14 +572,14 @@ export CUDA_VISIBLE_DEVICES=0,1
 
 # Model cache directory
 export TRANSFORMERS_CACHE="/path/to/cache"
-
+```
 
 ### Performance Tips
 
-1. *First Request*: Slow (models loading)
-2. *Subsequent Requests*: Fast (models cached in memory)
-3. *GPU Acceleration*: Significantly faster than CPU
-4. *Batch Processing*: Not currently supported (process sequentially)
+1. **First Request**: Slow (models loading)
+2. **Subsequent Requests**: Fast (models cached in memory)
+3. **GPU Acceleration**: Significantly faster than CPU
+4. **Batch Processing**: Not currently supported (process sequentially)
 
 ### Supported Image Formats
 
@@ -590,12 +590,12 @@ export TRANSFORMERS_CACHE="/path/to/cache"
 
 ### Query Types
 
-*VQA Queries:*
+**VQA Queries:**
 - "What is in this image?"
 - "Describe the scene"
 - "How many objects are there?"
 
-*Grounding Queries:*
+**Grounding Queries:**
 - "Locate all the airplanes"
 - "Find the largest building"
 - "Where are the ships?"
@@ -605,18 +605,18 @@ export TRANSFORMERS_CACHE="/path/to/cache"
 ## 🤝 Contributing
 
 1. Fork the repository
-2. Create a feature branch (git checkout -b feature/amazing-feature)
-3. Commit your changes (git commit -m 'Add amazing feature')
-4. Push to the branch (git push origin feature/amazing-feature)
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
 ### Development Setup
 
 For development, install additional tools:
 
-bash
+```bash
 pip install pytest black flake8 mypy
-
+```
 
 ---
 
@@ -628,10 +628,10 @@ pip install pytest black flake8 mypy
 
 ## 🙏 Acknowledgments
 
-- *YOLO*: Ultralytics YOLO11
-- *Qwen3-VL*: Alibaba Cloud Qwen Team
-- *Unsloth*: For optimized model loading
-- *HuggingFace*: For model hosting and transformers library
+- **YOLO**: Ultralytics YOLO11
+- **Qwen3-VL**: Alibaba Cloud Qwen Team
+- **Unsloth**: For optimized model loading
+- **HuggingFace**: For model hosting and transformers library
 
 ---
 
@@ -641,4 +641,4 @@ For issues, questions, or contributions, please open an issue on the repository.
 
 ---
 
-*Last Updated*: 2025
+**Last Updated**: 2025
