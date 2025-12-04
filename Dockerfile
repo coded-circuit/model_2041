@@ -32,7 +32,7 @@ EXPOSE 7860
 ENV PYTHONPATH="/app"
 
 # Make sure api_server.py is executable
-RUN chmod +x /app/testing/api_server.py
+RUN chmod +x /testing/api_server.py
 
 # Start the Flask API server using the correct path for api_server.py
-CMD ["python3", "/app/testing/api_server.py"]
+CMD ["python3", "/testing/api_server.py"]
