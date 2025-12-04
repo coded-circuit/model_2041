@@ -23,7 +23,7 @@ ENV PIP_DEFAULT_TIMEOUT=3600
 ENV PIP_NO_CACHE_DIR=1
 
 # Install Python dependencies from requirements_api.txt (located in /testing)
-RUN pip3 install -r /testing/requirements_api.txt
+RUN pip3 install -r ./testing/requirements_api.txt
 
 # Expose the Flask port
 EXPOSE 7860
@@ -32,7 +32,7 @@ EXPOSE 7860
 ENV PYTHONPATH="/app"
 
 # Make sure api_server.py is executable
-RUN chmod +x /testing/api_server.py
+RUN chmod +x ./testing/api_server.py
 
 # Start the Flask API server using the correct path for api_server.py
-CMD ["python3", "/testing/api_server.py"]
+CMD ["python3", "./testing/api_server.py"]
