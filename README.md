@@ -1,6 +1,6 @@
-# Model 2041 - Vision-Language Grounding System
+#Vision-Language Grounding System
 
-### A comprehensive vision-language AI system for object detection, grounding, and visual question answering (VQA) using YOLO, Qwen3-VL, and custom LoRA adapters.
+##### A comprehensive vision-language AI system for object detection, grounding, and visual question answering (VQA) using YOLO, Qwen3-VL, and custom LoRA adapters.
 ---
 
 ## Overview
