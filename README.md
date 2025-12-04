@@ -1,6 +1,6 @@
 # Model 2041 - Vision-Language Grounding System
 
-A comprehensive vision-language AI system for object detection, grounding, and visual question answering (VQA) using YOLO, Qwen3-VL, and custom LoRA adapters.
+### A comprehensive vision-language AI system for object detection, grounding, and visual question answering (VQA) using YOLO, Qwen3-VL, and custom LoRA adapters.
 ---
 
 ## Overview
@@ -96,7 +96,7 @@ User Input (Image + Query)
                 │
                 └─→ Qwen3-VL Refinement (refiner.py)
                     └─→ Refined coordinates matching query
-                        └─→ Final coordinates [cx, cy, w, h, angle]
+                        └─→ Final coordinates
 ```
 
 ### Detailed Component Flow
@@ -134,7 +134,7 @@ initialize_pipeline()
 get_coordinates(image_path, query)
     │
     ├─→ YOLO Detection (detector.py)
-    │   └─→ Returns: [[cx, cy, w, h, angle], ...]
+    │   └─→ Returns obbs
     │
     └─→ Qwen3-VL Refinement (refiner.py)
         ├─→ Format coordinates as prompt
@@ -156,15 +156,17 @@ initialize()
 
 ## Prerequisites
 
-- **Python**: 3.8 or higher
-- **CUDA**: 11.8+ (for GPU acceleration)
-- **GPU**: NVIDIA GPU with at least 16GB VRAM (recommended)
+- **Python**: 3.10 or 3.11
+- **Pytorch**: 2.9.0
+- **unsloth**: 2025.11.6
+- **CUDA**: 12.1+ (for GPU acceleration)
+- **GPU**: 2xA100 SXM4 80 GB RAM
 - **Git LFS**: Required for downloading large model files
-- **Operating System**: Linux (recommended), Windows, or macOS
+- **Operating System**: Linux
 
 ### System Requirements
-- **RAM**: 32GB+ recommended
-- **Storage**: 50GB+ free space for models
+- **RAM**: 50GB+
+- **Storage**: 150GB+ free space for models
 - **CUDA Toolkit**: 12.1+ (if using GPU)
 
 ---
@@ -192,15 +194,6 @@ python3 -m venv venv
 
 # Activate virtual environment
 source venv/bin/activate
-```
-
-**On Windows:**
-```powershell
-# Create virtual environment
-python -m venv venv
-
-# Activate virtual environment
-venv\Scripts\activate
 ```
 
 ### Step 3: Install Dependencies
