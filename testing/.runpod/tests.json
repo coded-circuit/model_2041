@@ -1,0 +1,360 @@
+{
+  "version": "1.0",
+  "test_suite_name": "Geospatial Inference API Tests",
+  "description": "Comprehensive test suite for API endpoints, model loading, and error handling",
+  "setup": {
+    "wait_for_ready": true,
+    "timeout": 120,
+    "health_endpoint": "/health"
+  },
+  "tests": [
+    {
+      "id": "test_001",
+      "name": "Health Check - Service Ready",
+      "description": "Verify the service is running and responding",
+      "endpoint": "/health",
+      "method": "GET",
+      "timeout": 5,
+      "expected": {
+        "status_code": 200,
+        "response_body": {
+          "status": "ok"
+        }
+      },
+      "critical": true
+    },
+    {
+      "id": "test_002",
+      "name": "VQA Inference - Semantic Question",
+      "description": "Test visual question answering with semantic query",
+      "endpoint": "/infer",
+      "method": "POST",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "imageUrl": "https://images.pexels.com/photos/1252890/pexels-photo-1252890.jpeg",
+        "query": "What color is the sky?"
+      },
+      "timeout": 60,
+      "expected": {
+        "status_code": 200,
+        "response_body": {
+          "status": "success"
+        },
+        "required_fields": ["status", "response"]
+      },
+      "critical": true
+    },
+    {
+      "id": "test_003",
+      "name": "VQA Inference - Numeric Question",
+      "description": "Test counting and numeric queries",
+      "endpoint": "/infer",
+      "method": "POST",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "imageUrl": "https://images.pexels.com/photos/164634/pexels-photo-164634.jpeg",
+        "query": "How many cars are visible?"
+      },
+      "timeout": 60,
+      "expected": {
+        "status_code": 200,
+        "response_body": {
+          "status": "success"
+        },
+        "required_fields": ["status", "response"],
+        "response_contains": ["VQA/Numeric"]
+      },
+      "critical": true
+    },
+    {
+      "id": "test_004",
+      "name": "VQA Inference - Binary Question",
+      "description": "Test yes/no questions",
+      "endpoint": "/infer",
+      "method": "POST",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "imageUrl": "https://images.pexels.com/photos/1252890/pexels-photo-1252890.jpeg",
+        "query": "Is there a building in the image?"
+      },
+      "timeout": 60,
+      "expected": {
+        "status_code": 200,
+        "response_body": {
+          "status": "success"
+        },
+        "required_fields": ["status", "response"],
+        "response_contains": ["VQA/Binary"]
+      },
+      "critical": true
+    },
+    {
+      "id": "test_005",
+      "name": "Grounding Inference - Object Detection",
+      "description": "Test object detection and localization",
+      "endpoint": "/infer",
+      "method": "POST",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "imageUrl": "https://images.pexels.com/photos/164634/pexels-photo-164634.jpeg",
+        "query": "Find all the cars in this image"
+      },
+      "timeout": 60,
+      "expected": {
+        "status_code": 200,
+        "response_body": {
+          "status": "success"
+        },
+        "required_fields": ["status", "response"],
+        "response_contains": ["GROUNDING"]
+      },
+      "critical": true
+    },
+    {
+      "id": "test_006",
+      "name": "Combined VQA + Grounding",
+      "description": "Test parallel execution of VQA and grounding tasks",
+      "endpoint": "/infer",
+      "method": "POST",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "imageUrl": "https://images.pexels.com/photos/164634/pexels-photo-164634.jpeg",
+        "query": "Find all cars and tell me what color they are"
+      },
+      "timeout": 90,
+      "expected": {
+        "status_code": 200,
+        "response_body": {
+          "status": "success"
+        },
+        "required_fields": ["status", "response"]
+      },
+      "critical": false
+    },
+    {
+      "id": "test_007",
+      "name": "Query Classification",
+      "description": "Test query classification endpoint",
+      "endpoint": "/classify_query",
+      "method": "POST",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "query": "How many buildings are there and where are they?"
+      },
+      "timeout": 10,
+      "expected": {
+        "status_code": 200,
+        "response_body": {
+          "status": "success"
+        },
+        "required_fields": ["status", "tasks"]
+      },
+      "critical": false
+    },
+    {
+      "id": "test_008",
+      "name": "Image Classification - Optical",
+      "description": "Test image type classification",
+      "endpoint": "/classify_image",
+      "method": "POST",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "imageUrl": "https://images.pexels.com/photos/1252890/pexels-photo-1252890.jpeg"
+      },
+      "timeout": 10,
+      "expected": {
+        "status_code": 200,
+        "response_body": {
+          "status": "success"
+        },
+        "required_fields": ["status", "image_type"]
+      },
+      "critical": false
+    },
+    {
+      "id": "test_009",
+      "name": "Error Handling - Missing imageUrl",
+      "description": "Verify proper error handling for missing imageUrl",
+      "endpoint": "/infer",
+      "method": "POST",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "query": "What is this?"
+      },
+      "timeout": 5,
+      "expected": {
+        "status_code": 400,
+        "response_body": {
+          "status": "error",
+          "message": "imageUrl required"
+        }
+      },
+      "critical": true
+    },
+    {
+      "id": "test_010",
+      "name": "Error Handling - Missing query",
+      "description": "Verify proper error handling for missing query",
+      "endpoint": "/infer",
+      "method": "POST",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "imageUrl": "https://images.pexels.com/photos/1252890/pexels-photo-1252890.jpeg"
+      },
+      "timeout": 5,
+      "expected": {
+        "status_code": 400,
+        "response_body": {
+          "status": "error",
+          "message": "query required"
+        }
+      },
+      "critical": true
+    },
+    {
+      "id": "test_011",
+      "name": "Error Handling - Invalid URL",
+      "description": "Test handling of invalid image URLs",
+      "endpoint": "/infer",
+      "method": "POST",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "imageUrl": "https://invalid-url-that-does-not-exist.com/image.jpg",
+        "query": "What is this?"
+      },
+      "timeout": 35,
+      "expected": {
+        "status_code": 500,
+        "response_body": {
+          "status": "error"
+        },
+        "required_fields": ["status", "message"]
+      },
+      "critical": false
+    },
+    {
+      "id": "test_012",
+      "name": "Session Memory - Sequential Queries",
+      "description": "Test memory persistence across multiple queries on same image",
+      "sequence": [
+        {
+          "endpoint": "/infer",
+          "method": "POST",
+          "headers": {
+            "Content-Type": "application/json"
+          },
+          "body": {
+            "imageUrl": "https://images.pexels.com/photos/164634/pexels-photo-164634.jpeg",
+            "query": "What is in this image?"
+          },
+          "timeout": 60
+        },
+        {
+          "endpoint": "/infer",
+          "method": "POST",
+          "headers": {
+            "Content-Type": "application/json"
+          },
+          "body": {
+            "imageUrl": "https://images.pexels.com/photos/164634/pexels-photo-164634.jpeg",
+            "query": "How many of them are there?"
+          },
+          "timeout": 60
+        }
+      ],
+      "expected": {
+        "all_status_codes": 200,
+        "all_have_field": "response"
+      },
+      "critical": false
+    },
+    {
+      "id": "test_013",
+      "name": "Concurrent Requests",
+      "description": "Test handling of multiple concurrent requests",
+      "concurrent": true,
+      "requests": [
+        {
+          "endpoint": "/infer",
+          "method": "POST",
+          "headers": {
+            "Content-Type": "application/json"
+          },
+          "body": {
+            "imageUrl": "https://images.pexels.com/photos/1252890/pexels-photo-1252890.jpeg",
+            "query": "What color is the sky?"
+          }
+        },
+        {
+          "endpoint": "/infer",
+          "method": "POST",
+          "headers": {
+            "Content-Type": "application/json"
+          },
+          "body": {
+            "imageUrl": "https://images.pexels.com/photos/164634/pexels-photo-164634.jpeg",
+            "query": "How many cars?"
+          }
+        }
+      ],
+      "timeout": 120,
+      "expected": {
+        "all_status_codes": 200,
+        "max_response_time": 90
+      },
+      "critical": false
+    },
+    {
+      "id": "test_014",
+      "name": "Large Image Handling",
+      "description": "Test processing of high-resolution images",
+      "endpoint": "/infer",
+      "method": "POST",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "imageUrl": "https://images.pexels.com/photos/1252890/pexels-photo-1252890.jpeg?auto=compress&cs=tinysrgb&w=4000",
+        "query": "Describe this image"
+      },
+      "timeout": 120,
+      "expected": {
+        "status_code": 200,
+        "response_body": {
+          "status": "success"
+        }
+      },
+      "critical": false
+    }
+  ],
+  "performance_benchmarks": {
+    "cold_start_max": 120,
+    "warm_inference_max": 60,
+    "health_check_max": 5,
+    "acceptable_failure_rate": 0.05
+  },
+  "cleanup": {
+    "clear_uploads": true,
+    "clear_memory": false
+  }
+}

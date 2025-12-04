@@ -1,0 +1,145 @@
+{
+  "name": "Geospatial Inference API",
+  "description": "Multi-modal geospatial image analysis with VQA, Object Grounding, and False Color Composite processing. Supports SAR, Optical, and FCC imagery with memory-aware conversational interface.",
+  "category": "AI Inference",
+  "tags": [
+    "computer-vision",
+    "geospatial",
+    "vqa",
+    "object-detection",
+    "sar",
+    "optical-imagery",
+    "multi-gpu",
+    "flask-api"
+  ],
+  "icon": "🛰️",
+  "author": {
+    "name": "Your Name",
+    "url": "https://github.com/yourusername",
+    "email": "your.email@example.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/geospatial-inference"
+  },
+  "license": "MIT",
+  "version": "1.0.0",
+  "compatibility": {
+    "min_cuda_version": "12.1",
+    "min_gpu_memory": 80,
+    "recommended_gpus": ["A100"],
+    "multi_gpu": true,
+    "gpu_count": 2
+  },
+  "deployment": {
+    "docker_image": "your-dockerhub-username/geospatial-inference:latest",
+    "container_port": 7860,
+    "protocol": "http",
+    "startup_time": 120,
+    "healthcheck_endpoint": "/health"
+  },
+  "resources": {
+    "gpu": {
+      "count": 2,
+      "memory": "80GB",
+      "type": "NVIDIA"
+    },
+    "cpu": {
+      "cores": 8
+    },
+    "memory": {
+      "size": "100GB"
+    },
+    "storage": {
+      "size": "150GB",
+      "persistent_paths": [
+        "/app/data/chroma_db",
+        "/app/uploads"
+      ]
+    }
+  },
+  "environment": {
+    "required": [
+      {
+        "name": "CUDA_VISIBLE_DEVICES",
+        "value": "0,1",
+        "description": "GPU device IDs (2 GPUs required)"
+      },
+      {
+        "name": "PYTHONUNBUFFERED",
+        "value": "1",
+        "description": "Force Python stdout/stderr to be unbuffered"
+      }
+    ],
+  "endpoints": [
+    {
+      "path": "/health",
+      "method": "GET",
+      "description": "Health check endpoint",
+      "response_example": {
+        "status": "ok"
+      }
+    },
+    {
+      "path": "/infer",
+      "method": "POST",
+      "description": "Main inference endpoint for image analysis",
+      "request_example": {
+        "imageUrl": "https://example.com/satellite.jpg",
+        "query": "How many buildings are visible?"
+      },
+      "response_example": {
+        "status": "success",
+        "response": "[VQA/Numeric] 15"
+      }
+    },
+  ],
+  "features": [
+    {
+      "name": "Multi-Modal Image Processing",
+      "description": "Automatically detects and processes SAR, Optical, and False Color Composite imagery"
+    },
+    {
+      "name": "Conversational Memory",
+      "description": "Session-based memory management with RAG for context-aware responses"
+    },
+    {
+      "name": "Parallel Task Execution",
+      "description": "Simultaneous VQA and grounding inference for faster results"
+    },
+    {
+      "name": "Intelligent Query Routing",
+      "description": "Automatically routes queries to appropriate models (VQA, Grounding, FCC)"
+    },
+    {
+      "name": "Dual-GPU Architecture",
+      "description": "Optimized workload distribution across 2 GPUs"
+    }
+  ],
+  "capabilities": {
+    "image_types": ["SAR", "Optical", "False Color Composite"],
+    "tasks": [
+      "Visual Question Answering (VQA)",
+      "Object Detection & Grounding",
+      "Image Captioning",
+      "Semantic Analysis",
+      "Binary Classification",
+      "Numeric Counting",
+      "False Color Composite Processing"
+    ],
+    "formats": ["jpg", "jpeg", "png", "tif", "tiff"]
+  },
+  "performance": {
+    "cold_start": "120s",
+    "warm_inference": "2-5s",
+    "concurrent_requests": 1,
+    "max_image_size": "2000x2000"
+  },
+  "documentation": {
+    "readme": "https://github.com/yourusername/geospatial-inference/blob/main/README.md",
+    "api_docs": "https://github.com/yourusername/geospatial-inference/blob/main/API_DOCS.md",
+    "examples": "https://github.com/yourusername/geospatial-inference/tree/main/examples"
+  },
+  "pricing_tier": "premium",
+  "visibility": "public"
+}
