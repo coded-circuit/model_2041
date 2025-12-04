@@ -187,7 +187,7 @@ git lfs pull
 
 ### Step 2: Create Virtual Environment
 
-**On Linux/macOS:**
+**On Linux:**
 ```bash
 # Create virtual environment
 python3 -m venv venv
@@ -218,7 +218,7 @@ pip install -r Final_Grounding/requirements.txt
 
 ```bash
 # Check Python version
-python --version  # Should be 3.8+
+python --version
 
 # Check CUDA (if using GPU)
 python -c "import torch; print(torch.cuda.is_available())"
