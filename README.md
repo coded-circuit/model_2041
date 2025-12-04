@@ -3,7 +3,7 @@
 A comprehensive vision-language AI system for object detection, grounding, and visual question answering (VQA) using YOLO, Qwen3-VL, and custom LoRA adapters.
 ---
 
-## 🎯 Overview
+## Overview
 
 This project implements a multi-modal AI system that combines:
 - **Object Detection**: YOLO11n-OBB with custom LoRA weights for oriented bounding box detection
@@ -14,7 +14,7 @@ This project implements a multi-modal AI system that combines:
 
 ---
 
-## 📁 Repository Structure
+## Repository Structure
 
 ```
 model_2041-main/
@@ -69,7 +69,7 @@ model_2041-main/
 
 ---
 
-## 🔄 File Flow & Architecture
+## File Flow & Architecture
 
 ### Main Pipeline Flow
 
@@ -154,7 +154,7 @@ initialize()
     └─→ Load FCC Model (if needed)
 ```
 
-## 🔧 Prerequisites
+## Prerequisites
 
 - **Python**: 3.8 or higher
 - **CUDA**: 11.8+ (for GPU acceleration)
@@ -169,7 +169,7 @@ initialize()
 
 ---
 
-## 🚀 Installation & Setup
+## Installation & Setup
 
 ### Step 1: Clone the Repository
 
@@ -243,7 +243,7 @@ If model files are not automatically downloaded via Git LFS, ensure the followin
 
 ---
 
-## 💻 Usage
+## Usage
 
 ### Option 1: Run API Server (Recommended)
 
@@ -310,7 +310,7 @@ print(result)
 
 ---
 
-## 🧩 Project Components
+## Project Components
 
 ### Core Modules
 
@@ -348,4 +348,3 @@ All model files are stored in Git LFS. Ensure Git LFS is installed and initializ
 - **Optical Adapter**: `testing/Qwen_for_Optical_2/`
 - **Image Classifier**: `temp/classifiers/final_model_all_classes.keras`
 ---
-t Updated**: 2025
